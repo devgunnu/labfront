@@ -12,6 +12,11 @@ const Register = () => {
     const userRef = useRef();
     const errRef = useRef();
 
+    const [firstName, setFirstName] = useState('');
+    const [lastName, setLastName] = useState('');
+    const [email, setEmail] = useState('');
+    const [courseCode, setCourseCode] = useState('');
+    
     const [user, setUser] = useState('');
     const [validName, setValidName] = useState(false);
     const [userFocus, setUserFocus] = useState(false);
@@ -42,7 +47,7 @@ const Register = () => {
 
     useEffect(() => {
         setErrMsg('');
-    }, [user, pwd, matchPwd])
+    }, [user, pwd, matchPwd, firstName, lastName, email, courseCode])
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -55,7 +60,7 @@ const Register = () => {
         }
         try {
             const response = await axios.post(REGISTER_URL,
-                JSON.stringify({ user, pwd }),
+                JSON.stringify({firstName, lastName, email, courseCode, user, pwd}),
                 {
                     headers: { 'Content-Type': 'application/json' },
                     withCredentials: true
@@ -66,6 +71,10 @@ const Register = () => {
             //console.log(JSON.stringify(response))
             setSuccess(true);
             //clear state and controlled inputs
+            setFirstName('');
+            setLastName('');
+            setEmail('');
+            setCourseCode('');
             setUser('');
             setPwd('');
             setMatchPwd('');
@@ -95,6 +104,46 @@ const Register = () => {
                     <p ref={errRef} className={errMsg ? "errmsg" : "offscreen"} aria-live="assertive">{errMsg}</p>
                     <h1>Register</h1>
                     <form onSubmit={handleSubmit}>
+                        <label htmlFor="first_name">
+                            First Name:
+                        </label>
+                        <input
+                            type="text"
+                            id="first_name"
+                            onChange={(e) => setFirstName(e.target.value)}
+                            value={firstName}
+                            required
+                        />
+                        <label htmlFor="last_name">
+                            Last Name:
+                        </label>
+                        <input
+                            type="text"
+                            id="last_name"
+                            onChange={(e) => setLastName(e.target.value)}
+                            value={lastName}
+                            required
+                        />
+                        <label htmlFor="email">
+                            Email:
+                        </label>
+                        <input
+                            type="email"
+                            id="email"
+                            onChange={(e) => setEmail(e.target.value)}
+                            value={email}
+                            required
+                        />
+                        <label htmlFor="course_code">
+                            Course Code:
+                        </label>
+                        <input
+                            type="text"
+                            id="course_code"
+                            onChange={(e) => setCourseCode(e.target.value)}
+                            value={courseCode}
+                            required
+                        />
                         <label htmlFor="username">
                             Username:
                             <FontAwesomeIcon icon={faCheck} className={validName ? "valid" : "hide"} />
